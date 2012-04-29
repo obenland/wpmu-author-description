@@ -2,11 +2,11 @@
 /** wpmu-author-description.php
  *
  * Plugin Name:	WPMU Author Description
- * Plugin URI:	http://en.wp.obenland.it/wpmu-author-description/?utm_source=wordpress&utm_medium=plugin&utm_campaign=wpmu-author-description
+ * Plugin URI:	http://en.wp.obenland.it/wpmu-author-description/#utm_source=wordpress&utm_medium=plugin&utm_campaign=wpmu-author-description
  * Description:	Specify a unique autor description for each individual site in a network. 
- * Version:		1.0.0
+ * Version:		1.0.1
  * Author:		Konstantin Obenland
- * Author URI:	http://en.wp.obenland.it/?utm_source=wordpress&utm_medium=plugin&utm_campaign=wpmu-author-description
+ * Author URI:	http://en.wp.obenland.it/#utm_source=wordpress&utm_medium=plugin&utm_campaign=wpmu-author-description
  * Text Domain:	wpmu-author-description
  * Domain Path:	/lang
  * Network:		Network
@@ -19,12 +19,12 @@ if ( ! is_multisite() ) {
 }
 
 
-if ( ! class_exists( 'Obenland_Wp_Plugins_v200' ) ) {
+if ( ! class_exists( 'Obenland_Wp_Plugins_v300' ) ) {
 	require_once( 'obenland-wp-plugins.php' );
 }
 
 
-class Obenland_WPMU_Author_Description extends Obenland_Wp_Plugins_v200 {
+class Obenland_WPMU_Author_Description extends Obenland_Wp_Plugins_v300 {
 	
 	
 	///////////////////////////////////////////////////////////////////////////
@@ -117,9 +117,9 @@ class Obenland_WPMU_Author_Description extends Obenland_Wp_Plugins_v200 {
 	public function get_the_author_description( $description, $user_id ) {
 		
 		if ( ! $this->is_primary_blog( $user_id ) ) {
-			$descriptions	=	get_user_meta( $user_id, $this->textdomain, true );
+			$descriptions = (array) get_user_meta( $user_id, $this->textdomain, true );
 			if ( array_key_exists( get_current_blog_id(), $descriptions) ) {
-				$description	=	$descriptions[get_current_blog_id()];
+				$description = $descriptions[get_current_blog_id()];
 			}
 		}
 		return $description;

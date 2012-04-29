@@ -1,10 +1,10 @@
 === WPMU Author Description ===
-Contributors: kobenland
+Contributors: obenland
 Tags: admin, wpmu, network, sites, author, description
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=RZS8JEXZC6RC4
 Requires at least: 3.1
-Tested up to: 3.3.2
-Stable tag: 1.0.0
+Tested up to: 3.4.1
+Stable tag: 1.0.1
 
 Specify a unique autor description for each individual site in a network.
 
@@ -27,7 +27,10 @@ None asked yet.
 
 == Changelog ==
 
-= 1.0 =
+= 1.0.1 =
+* Fixed an error when no custom bio was set
+
+= 1.0.0 =
 * Initial Release
 
 
