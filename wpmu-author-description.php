@@ -3,7 +3,7 @@
  *
  * Plugin Name:	WPMU Author Description
  * Plugin URI:	http://en.wp.obenland.it/wpmu-author-description/?utm_source=wordpress&utm_medium=plugin&utm_campaign=wpmu-author-description
- * Description:	Retruns the description based on the site.
+ * Description:	Lets you specify a unique autor description based on the current site.
  * Version:		1.0.0
  * Author:		Konstantin Obenland
  * Author URI:	http://en.wp.obenland.it/?utm_source=wordpress&utm_medium=plugin&utm_campaign=wpmu-author-description
@@ -24,9 +24,9 @@ if ( ! class_exists( 'Obenland_Wp_Plugins_v200' ) ) {
 class Obenland_WPMU_Author_Description extends Obenland_Wp_Plugins_v200 {
 	
 	
-	/////////////////////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////
 	// METHODS, PUBLIC
-	/////////////////////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////
 	
 	/**
 	 * Constructor
@@ -44,27 +44,89 @@ class Obenland_WPMU_Author_Description extends Obenland_Wp_Plugins_v200 {
 		parent::__construct( array(
 			'textdomain'		=>	'wpmu-author-description',
 			'plugin_path'		=>	__FILE__,
-			'donate_link_id'	=>	'HEXL3UM8D7R6N'
+			'donate_link_id'	=>	''
 		));
 		
+		$this->hook( 'pre_user_description', 999 );
 		$this->hook( 'get_the_author_description' );
+		$this->hook( 'edit_description', 'get_the_author_description' );
+		$this->hook( 'edit_user_description', 'get_the_author_description' );
 	}
 	
 	
 	/**
-	 * Displays the dropdown form
+	 * Saves the author description, based on which blog we are
 	 *
 	 * @author	Konstantin Obenland
-	 * @since	1.0
+	 * @since	1.0.0 - 27.04.2012
+	 * @access	public
+	 * @global	$user_id
+	 *
+	 * @param	string	$description	The user description
+	 *
+	 * @return	string
+	 */
+	public function pre_user_description( $description ) {
+		global $user_id;
+		
+		if ( ! $this->is_primary_blog( $user_id ) ) {
+			$custom_descriptions = (array) get_user_meta( $user_id, $this->textdomain, true );
+			$custom_descriptions[get_current_blog_id()] = $description;
+			update_user_meta( $user_id, $this->textdomain, $custom_descriptions );
+			
+			$description = get_user_meta( $user_id, 'description', true );
+		}
+		return $description;
+	}
+	
+	
+	/**
+	 * Returns the description for this specific blog
+	 *
+	 * @author	Konstantin Obenland
+	 * @since	1.0.0 - 27.04.2012
 	 * @access	public
 	 * 
 	 * @param	string	$description	The user description
-	 * @param	int		$user_id		The user ID	
+	 * @param	int		$user_id		The user ID
 	 *
 	 * @return	string
 	 */
 	public function get_the_author_description( $description, $user_id ) {
+		
+		if ( ! $this->is_primary_blog( $user_id ) ) {
+			$descriptions	=	get_user_meta( $user_id, $this->textdomain, true );
+			if ( array_key_exists( get_current_blog_id(), $descriptions) ) {
+				$description	=	$descriptions[get_current_blog_id()];
+			}
+		}
 		return $description;
+	}
+	
+	
+	///////////////////////////////////////////////////////////////////////////
+	// METHODS, PROTECTED
+	///////////////////////////////////////////////////////////////////////////
+	
+	/**
+	 * Determines, whether we are on the primary blog for the user
+	 *
+	 * @author	Konstantin Obenland
+	 * @since	1.0.0 - 28.04.2012
+	 * @access	public
+	 *
+	 * @param	int		$user_id	The user ID
+	 *
+	 * @return	bool
+	 */
+	protected function is_primary_blog( $user_id = 0 ) {
+		$user_id = (int) $user_id;
+	
+		if ( ! $user_id ) {
+			$user_id = get_current_user_id();
+		}
+		
+		return get_user_meta( $user_id, 'primary_blog', true ) == get_current_blog_id();
 	}
 	
 } // End Class Obenland_WPMU_Author_Description
