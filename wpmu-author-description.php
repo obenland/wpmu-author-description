@@ -3,18 +3,21 @@
  *
  * Plugin Name:	WPMU Author Description
  * Plugin URI:	http://en.wp.obenland.it/wpmu-author-description/?utm_source=wordpress&utm_medium=plugin&utm_campaign=wpmu-author-description
- * Description:	Lets you specify a unique autor description based on the current site.
+ * Description:	Specify a unique autor description for each individual site in a network. 
  * Version:		1.0.0
  * Author:		Konstantin Obenland
  * Author URI:	http://en.wp.obenland.it/?utm_source=wordpress&utm_medium=plugin&utm_campaign=wpmu-author-description
  * Text Domain:	wpmu-author-description
  * Domain Path:	/lang
+ * Network:		Network
  * License:		GPLv2
  */
+
 
 if ( ! is_multisite() ) {
 	return;
 }
+
 
 if ( ! class_exists( 'Obenland_Wp_Plugins_v200' ) ) {
 	require_once( 'obenland-wp-plugins.php' );
@@ -44,13 +47,27 @@ class Obenland_WPMU_Author_Description extends Obenland_Wp_Plugins_v200 {
 		parent::__construct( array(
 			'textdomain'		=>	'wpmu-author-description',
 			'plugin_path'		=>	__FILE__,
-			'donate_link_id'	=>	''
+			'donate_link_id'	=>	'RZS8JEXZC6RC4'
 		));
 		
+		$this->hook( 'plugins_loaded' );
+	}
+	
+	
+	/**
+	 * Hooks the hooks
+	 *
+	 * @author	Konstantin Obenland
+	 * @since	1.0.0 - 29.04.2012
+	 * @access	public
+	 *
+	 * @return	void
+	 */
+	public function plugins_loaded() {
 		$this->hook( 'pre_user_description', 999 );
 		$this->hook( 'get_the_author_description' );
-		$this->hook( 'edit_description', 'get_the_author_description' );
-		$this->hook( 'edit_user_description', 'get_the_author_description' );
+		$this->hook( 'edit_description',		'get_the_author_description' );
+		$this->hook( 'edit_user_description',	'get_the_author_description' );
 	}
 	
 	
@@ -71,10 +88,15 @@ class Obenland_WPMU_Author_Description extends Obenland_Wp_Plugins_v200 {
 		
 		if ( ! $this->is_primary_blog( $user_id ) ) {
 			$custom_descriptions = (array) get_user_meta( $user_id, $this->textdomain, true );
-			$custom_descriptions[get_current_blog_id()] = $description;
-			update_user_meta( $user_id, $this->textdomain, $custom_descriptions );
 			
-			$description = get_user_meta( $user_id, 'description', true );
+			if ( $description ) {
+				$custom_descriptions[get_current_blog_id()] = $description;
+				$description = get_user_meta( $user_id, 'description', true );
+			}
+			else {
+				unset( $custom_descriptions[get_current_blog_id()] );	
+			}
+			update_user_meta( $user_id, $this->textdomain, $custom_descriptions );
 		}
 		return $description;
 	}
