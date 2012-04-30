@@ -27,7 +27,10 @@ None asked yet.
 
 == Changelog ==
 
-= 1.0 =
+= 1.0.1 =
+* Fixed an error when no custom bio was set
+
+= 1.0.0 =
 * Initial Release
 
 

@@ -117,9 +117,9 @@ class Obenland_WPMU_Author_Description extends Obenland_Wp_Plugins_v200 {
 	public function get_the_author_description( $description, $user_id ) {
 		
 		if ( ! $this->is_primary_blog( $user_id ) ) {
-			$descriptions	=	get_user_meta( $user_id, $this->textdomain, true );
+			$descriptions = (array) get_user_meta( $user_id, $this->textdomain, true );
 			if ( array_key_exists( get_current_blog_id(), $descriptions) ) {
-				$description	=	$descriptions[get_current_blog_id()];
+				$description = $descriptions[get_current_blog_id()];
 			}
 		}
 		return $description;
