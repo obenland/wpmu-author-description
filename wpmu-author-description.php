@@ -2,11 +2,11 @@
 /** wpmu-author-description.php
  *
  * Plugin Name:	WPMU Author Description
- * Plugin URI:	http://en.wp.obenland.it/wpmu-author-description/?utm_source=wordpress&utm_medium=plugin&utm_campaign=wpmu-author-description
+ * Plugin URI:	http://en.wp.obenland.it/wpmu-author-description/#utm_source=wordpress&utm_medium=plugin&utm_campaign=wpmu-author-description
  * Description:	Specify a unique autor description for each individual site in a network. 
- * Version:		1.0.0
+ * Version:		1.0.1
  * Author:		Konstantin Obenland
- * Author URI:	http://en.wp.obenland.it/?utm_source=wordpress&utm_medium=plugin&utm_campaign=wpmu-author-description
+ * Author URI:	http://en.wp.obenland.it/#utm_source=wordpress&utm_medium=plugin&utm_campaign=wpmu-author-description
  * Text Domain:	wpmu-author-description
  * Domain Path:	/lang
  * Network:		Network
